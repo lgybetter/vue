@@ -60,11 +60,13 @@ export function _createElement (
     return createEmptyVNode()
   }
   // object syntax in v-bind
+  // componet动态组件等制定is
   if (isDef(data) && isDef(data.is)) {
     tag = data.is
   }
   if (!tag) {
     // in case of component :is set to falsy value
+    // 创建注释节点
     return createEmptyVNode()
   }
   // warn against non-primitive key
@@ -87,6 +89,7 @@ export function _createElement (
     data.scopedSlots = { default: children[0] }
     children.length = 0
   }
+  // 格式化转换children为vnode的一维数组
   if (normalizationType === ALWAYS_NORMALIZE) {
     children = normalizeChildren(children)
   } else if (normalizationType === SIMPLE_NORMALIZE) {
@@ -96,6 +99,7 @@ export function _createElement (
   if (typeof tag === 'string') {
     let Ctor
     ns = (context.$vnode && context.$vnode.ns) || config.getTagNamespace(tag)
+    // 是否为保留标签(比如：浏览器原生标签)
     if (config.isReservedTag(tag)) {
       // platform built-in elements
       if (process.env.NODE_ENV !== 'production' && isDef(data) && isDef(data.nativeOn)) {
@@ -110,6 +114,7 @@ export function _createElement (
       )
     } else if ((!data || !data.pre) && isDef(Ctor = resolveAsset(context.$options, 'components', tag))) {
       // component
+      // 创建组件
       vnode = createComponent(Ctor, data, context, children, tag)
     } else {
       // unknown or unlisted namespaced elements
@@ -124,6 +129,7 @@ export function _createElement (
     // direct component options / constructor
     vnode = createComponent(tag, data, context, children)
   }
+  // 返回vnode
   if (Array.isArray(vnode)) {
     return vnode
   } else if (isDef(vnode)) {
