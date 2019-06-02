@@ -114,7 +114,7 @@ export function _createElement (
       )
     } else if ((!data || !data.pre) && isDef(Ctor = resolveAsset(context.$options, 'components', tag))) {
       // component
-      // 创建组件
+      // 查询是否为已注册的组件，则创建组件 Ctor为组件名
       vnode = createComponent(Ctor, data, context, children, tag)
     } else {
       // unknown or unlisted namespaced elements
