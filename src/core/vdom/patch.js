@@ -75,7 +75,9 @@ export function createPatchFunction (backend) {
 
   for (i = 0; i < hooks.length; ++i) {
     cbs[hooks[i]] = []
+    // 遍历模块，并保存对应的hooks到cbs的回调对象, 初始化钩子函数
     for (j = 0; j < modules.length; ++j) {
+      // hooks = ['create', 'activate', 'update', 'remove', 'destroy']
       if (isDef(modules[j][hooks[i]])) {
         cbs[hooks[i]].push(modules[j][hooks[i]])
       }
