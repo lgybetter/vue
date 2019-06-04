@@ -7,6 +7,7 @@ import { initExtend } from './extend'
 import { initAssetRegisters } from './assets'
 import { set, del } from '../observer/index'
 import { ASSET_TYPES } from 'shared/constants'
+// 内置组件 keep-alive
 import builtInComponents from '../components/index'
 import { observe } from 'core/observer/index'
 
@@ -52,6 +53,9 @@ export function initGlobalAPI (Vue: GlobalAPI) {
   }
 
   Vue.options = Object.create(null)
+
+  // ASSET_TYPES: component, directive, filter。
+  // vue的资源方法: https://cn.vuejs.org/v2/api/#%E9%80%89%E9%A1%B9-%E8%B5%84%E6%BA%90
   ASSET_TYPES.forEach(type => {
     Vue.options[type + 's'] = Object.create(null)
   })

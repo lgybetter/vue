@@ -88,6 +88,10 @@ export function renderMixin (Vue: Class<Component>) {
       // separately from one another. Nested component's render fns are called
       // when parent component is patched.
       currentRenderingInstance = vm
+      /**
+       * _renderProxy对vm对象进行劫持，主要用于校验render函数中用到的变量
+       * $createElement提供用户自行编写render函数
+       */
       vnode = render.call(vm._renderProxy, vm.$createElement)
     } catch (e) {
       handleError(e, vm, `render`)

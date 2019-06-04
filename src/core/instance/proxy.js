@@ -14,6 +14,7 @@ if (process.env.NODE_ENV !== 'production') {
   )
 
   const warnNonPresent = (target, key) => {
+    // render函数的变量没有定义
     warn(
       `Property or method "${key}" is not defined on the instance but ` +
       'referenced during render. Make sure that this property is reactive, ' +
@@ -76,12 +77,14 @@ if (process.env.NODE_ENV !== 'production') {
   }
 
   initProxy = function initProxy (vm) {
+    // 判断浏览器是否支持proxy
     if (hasProxy) {
       // determine which proxy handler to use
       const options = vm.$options
       const handlers = options.render && options.render._withStripped
         ? getHandler
         : hasHandler
+      // 对_renderProxy进行对象劫持
       vm._renderProxy = new Proxy(vm, handlers)
     } else {
       vm._renderProxy = vm

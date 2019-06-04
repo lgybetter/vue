@@ -34,6 +34,7 @@ Vue.prototype.$mount = function (
   if (!options.render) {
     let template = options.template
     if (template) {
+      // 对template进行处理
       if (typeof template === 'string') {
         if (template.charAt(0) === '#') {
           template = idToTemplate(template)

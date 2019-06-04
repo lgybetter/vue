@@ -36,6 +36,8 @@ const sharedPropertyDefinition = {
 }
 
 export function proxy (target: Object, sourceKey: string, key: string) {
+  // 定义getter和setter, target为vm
+  // this.message => this._data.message
   sharedPropertyDefinition.get = function proxyGetter () {
     return this[sourceKey][key]
   }
@@ -53,6 +55,7 @@ export function initState (vm: Component) {
   if (opts.data) {
     initData(vm)
   } else {
+    // 响应式处理
     observe(vm._data = {}, true /* asRootData */)
   }
   if (opts.computed) initComputed(vm, opts.computed)
@@ -144,6 +147,7 @@ function initData (vm: Component) {
         vm
       )
     } else if (!isReserved(key)) {
+      // vue实例代理属性
       proxy(vm, `_data`, key)
     }
   }
@@ -153,8 +157,10 @@ function initData (vm: Component) {
 
 export function getData (data: Function, vm: Component): any {
   // #7573 disable dep collection when invoking data getters
+  // 响应式原理
   pushTarget()
   try {
+    // 调用data对象并返回值
     return data.call(vm, vm)
   } catch (e) {
     handleError(e, vm, `data()`)

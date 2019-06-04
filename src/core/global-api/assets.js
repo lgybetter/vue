@@ -26,6 +26,7 @@ export function initAssetRegisters (Vue: GlobalAPI) {
         if (type === 'directive' && typeof definition === 'function') {
           definition = { bind: definition, update: definition }
         }
+        // 记录当前Vue的全局components, filters, directives对应的声明映射
         this.options[type + 's'][id] = definition
         return definition
       }
