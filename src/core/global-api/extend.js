@@ -20,18 +20,22 @@ export function initExtend (Vue: GlobalAPI) {
     extendOptions = extendOptions || {}
     const Super = this
     const SuperId = Super.cid
+    // 缓存优化
     const cachedCtors = extendOptions._Ctor || (extendOptions._Ctor = {})
     if (cachedCtors[SuperId]) {
       return cachedCtors[SuperId]
     }
 
+    // 组件name
     const name = extendOptions.name || Super.options.name
     if (process.env.NODE_ENV !== 'production' && name) {
+      // 校验组件名称
       validateComponentName(name)
     }
 
     // 继承组件定义
     const Sub = function VueComponent (options) {
+      // 执行Vue.prototype._init方法
       this._init(options)
     }
     // 继承父组件Vue的原型
@@ -85,6 +89,7 @@ export function initExtend (Vue: GlobalAPI) {
 
     // cache constructor
     cachedCtors[SuperId] = Sub
+    // 返回子组件构造器
     return Sub
   }
 }
