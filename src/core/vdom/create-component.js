@@ -44,10 +44,12 @@ const componentVNodeHooks = {
       const mountedNode: any = vnode // work around flow
       componentVNodeHooks.prepatch(mountedNode, mountedNode)
     } else {
+      // 返回子组件实例
       const child = vnode.componentInstance = createComponentInstanceForVnode(
         vnode,
         activeInstance
       )
+      // platform下的$mount方法
       child.$mount(hydrating ? vnode.elm : undefined, hydrating)
     }
   },
@@ -209,12 +211,12 @@ export function createComponent (
 }
 
 export function createComponentInstanceForVnode (
-  vnode: any, // we know it's MountedComponentVNode but flow doesn't
-  parent: any, // activeInstance in lifecycle state
+  vnode: any, // we know it's MountedComponentVNode but flow doesn't 组件VNode
+  parent: any, // activeInstance in lifecycle state 当前的vm实例
 ): Component {
   const options: InternalComponentOptions = {
-    _isComponent: true,
-    _parentVnode: vnode,
+    _isComponent: true, // 给_init中merge options进行判断
+    _parentVnode: vnode, // 占位符VNode
     parent
   }
   // check inline-template render functions
@@ -223,6 +225,7 @@ export function createComponentInstanceForVnode (
     options.render = inlineTemplate.render
     options.staticRenderFns = inlineTemplate.staticRenderFns
   }
+  // 通过Vue.extend所创建的子组件构造器, 执行子组件的_init方法
   return new vnode.componentOptions.Ctor(options)
 }
 

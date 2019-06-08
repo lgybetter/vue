@@ -33,6 +33,7 @@ export function initLifecycle (vm: Component) {
   const options = vm.$options
 
   // locate first non-abstract parent
+  // 为activeInstance, 每次调用_update的时候赋值activeInstance当前vm实例
   let parent = options.parent
   if (parent && !options.abstract) {
     while (parent.$options.abstract && parent.$parent) {
@@ -61,6 +62,7 @@ export function lifecycleMixin (Vue: Class<Component>) {
     const vm: Component = this
     const prevEl = vm.$el
     const prevVnode = vm._vnode
+    // 把当前的vm实例存入activeInstance
     const restoreActiveInstance = setActiveInstance(vm)
     vm._vnode = vnode
     // Vue.prototype.__patch__ is injected in entry points
