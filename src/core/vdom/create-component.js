@@ -116,7 +116,7 @@ export function createComponent (
 
   // plain options object: turn it into a constructor
   if (isObject(Ctor)) {
-    // 获取构造器
+    // 获取构造器，对于非全局注册的组件使用
     Ctor = baseCtor.extend(Ctor)
   }
 
@@ -131,9 +131,12 @@ export function createComponent (
 
   // async component
   let asyncFactory
+  // 如果Ctro.cide为undefined，则说明可能是异步组件注册
   if (isUndef(Ctor.cid)) {
     asyncFactory = Ctor
+    // 解析异步组件
     Ctor = resolveAsyncComponent(asyncFactory, baseCtor)
+    // Ctor为undefined则创建异步组件的占位符组件Vnode
     if (Ctor === undefined) {
       // return a placeholder node for async component, which is rendered
       // as a comment node but preserves all the raw information for the node.

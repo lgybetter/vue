@@ -37,8 +37,8 @@ export function initMixin (Vue: Class<Component>) {
       initInternalComponent(vm, options)
     } else {
       vm.$options = mergeOptions(
-        resolveConstructorOptions(vm.constructor),
-        options || {},
+        resolveConstructorOptions(vm.constructor), // vm.constructor = Vue
+        options || {}, // 定义传入
         vm
       )
     }
@@ -92,6 +92,7 @@ export function initInternalComponent (vm: Component, options: InternalComponent
   }
 }
 
+// 解决全局mixins，返回Vue.options，组件初始化的时候处理options再返回, 
 export function resolveConstructorOptions (Ctor: Class<Component>) {
   let options = Ctor.options
   if (Ctor.super) {

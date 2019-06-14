@@ -44,6 +44,7 @@ export function resolveAsyncComponent (
   factory: Function,
   baseCtor: Class<Component>
 ): Class<Component> | void {
+  // 高级异步组件使用
   if (isTrue(factory.error) && isDef(factory.errorComp)) {
     return factory.errorComp
   }
@@ -87,7 +88,7 @@ export function resolveAsyncComponent (
         }
       }
     }
-
+    // once让被once包装的任何函数的其中一个只执行一次
     const resolve = once((res: Object | Class<Component>) => {
       // cache resolved
       factory.resolved = ensureCtor(res, baseCtor)
@@ -111,9 +112,10 @@ export function resolveAsyncComponent (
       }
     })
 
+    // 执行工厂函数，比如webpack获取异步组件资源
     const res = factory(resolve, reject)
-
     if (isObject(res)) {
+      // 为Promise对象， import('./async-component')
       if (isPromise(res)) {
         // () => Promise
         if (isUndef(factory.resolved)) {

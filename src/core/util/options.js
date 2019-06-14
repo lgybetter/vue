@@ -142,6 +142,7 @@ strats.data = function (
 
 /**
  * Hooks and props are merged as arrays.
+ * 合并生命周期后，最终返回的是一个函数数组
  */
 function mergeHook (
   parentVal: ?Array<Function>,
@@ -428,6 +429,7 @@ export function mergeOptions (
     }
   }
   function mergeField (key) {
+    // 通过key获取到对应的strat函数，strats是定义的策略
     const strat = strats[key] || defaultStrat
     options[key] = strat(parent[key], child[key], vm, key)
   }
