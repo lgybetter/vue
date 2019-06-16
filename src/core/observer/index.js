@@ -33,6 +33,8 @@ export function toggleObserving (value: boolean) {
  * object. Once attached, the observer converts the target
  * object's property keys into getter/setters that
  * collect dependencies and dispatch updates.
+ * 
+ * Observer 用于给对象的属性添加getter和setter，用于进行依赖收集和更新下发
  */
 export class Observer {
   value: any;
@@ -43,6 +45,7 @@ export class Observer {
     this.value = value
     this.dep = new Dep()
     this.vmCount = 0
+    // 把实例对象添加到数据对象中的__ob__
     def(value, '__ob__', this)
     if (Array.isArray(value)) {
       if (hasProto) {
@@ -50,8 +53,10 @@ export class Observer {
       } else {
         copyAugment(value, arrayMethods, arrayKeys)
       }
+      // 数组类型遍历再次调用observe
       this.observeArray(value)
     } else {
+      // 遍历对象调用defineReactive
       this.walk(value)
     }
   }
@@ -111,8 +116,10 @@ export function observe (value: any, asRootData: ?boolean): Observer | void {
   if (!isObject(value) || value instanceof VNode) {
     return
   }
+  // 非Vnode的对象类型才执行监听器初始化
   let ob: Observer | void
   if (hasOwn(value, '__ob__') && value.__ob__ instanceof Observer) {
+    // 对于已经挂载监听器的value直接返回
     ob = value.__ob__
   } else if (
     shouldObserve &&
@@ -121,6 +128,7 @@ export function observe (value: any, asRootData: ?boolean): Observer | void {
     Object.isExtensible(value) &&
     !value._isVue
   ) {
+    // 把value传入Observer进行进行监听器实例化
     ob = new Observer(value)
   }
   if (asRootData && ob) {
@@ -131,6 +139,8 @@ export function observe (value: any, asRootData: ?boolean): Observer | void {
 
 /**
  * Define a reactive property on an Object.
+ * 
+ * 定义一个响应式对象，动态添加getter和setter
  */
 export function defineReactive (
   obj: Object,
@@ -140,7 +150,7 @@ export function defineReactive (
   shallow?: boolean
 ) {
   const dep = new Dep()
-
+  // 获取对象的属性描述符
   const property = Object.getOwnPropertyDescriptor(obj, key)
   if (property && property.configurable === false) {
     return
@@ -152,7 +162,7 @@ export function defineReactive (
   if ((!getter || setter) && arguments.length === 2) {
     val = obj[key]
   }
-
+  
   let childOb = !shallow && observe(val)
   Object.defineProperty(obj, key, {
     enumerable: true,

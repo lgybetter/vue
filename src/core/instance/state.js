@@ -37,7 +37,9 @@ const sharedPropertyDefinition = {
 
 export function proxy (target: Object, sourceKey: string, key: string) {
   // 定义getter和setter, target为vm
+  // sourceKey => _data, _props等
   // this.message => this._data.message
+  // this.type => this._props.type
   sharedPropertyDefinition.get = function proxyGetter () {
     return this[sourceKey][key]
   }
@@ -88,6 +90,7 @@ function initProps (vm: Component, propsOptions: Object) {
           vm
         )
       }
+      // 把props对应的数据对象变为响应式
       defineReactive(props, key, value, () => {
         if (!isRoot && !isUpdatingChildComponent) {
           warn(
@@ -105,6 +108,7 @@ function initProps (vm: Component, propsOptions: Object) {
     // static props are already proxied on the component's prototype
     // during Vue.extend(). We only need to proxy props defined at
     // instantiation here.
+    // vue实例代理属性, 对于静态属性无需进行实例代理
     if (!(key in vm)) {
       proxy(vm, `_props`, key)
     }
@@ -113,7 +117,8 @@ function initProps (vm: Component, propsOptions: Object) {
 }
 
 function initData (vm: Component) {
-  let data = vm.$options.data
+  let data = vm.$options.data 
+  // 把传入的 options 的 data 对象赋值到 vm._data 
   data = vm._data = typeof data === 'function'
     ? getData(data, vm)
     : data || {}
@@ -140,6 +145,7 @@ function initData (vm: Component) {
         )
       }
     }
+    // 判断props和data的属性命名是否冲突
     if (props && hasOwn(props, key)) {
       process.env.NODE_ENV !== 'production' && warn(
         `The data property "${key}" is already declared as a prop. ` +
@@ -151,7 +157,7 @@ function initData (vm: Component) {
       proxy(vm, `_data`, key)
     }
   }
-  // observe data
+  // observe data 监测数据变化
   observe(data, true /* asRootData */)
 }
 
