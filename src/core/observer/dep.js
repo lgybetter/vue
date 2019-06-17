@@ -9,15 +9,17 @@ let uid = 0
 /**
  * A dep is an observable that can have multiple
  * directives subscribing to it.
+ * Dep的作用是建立起数据和watcher之间的桥梁
  */
 export default class Dep {
+  // 静态属性
   static target: ?Watcher;
   id: number;
   subs: Array<Watcher>;
 
   constructor () {
     this.id = uid++
-    this.subs = []
+    this.subs = [] // 订阅当前数据变化的watcher
   }
 
   addSub (sub: Watcher) {
@@ -30,6 +32,7 @@ export default class Dep {
 
   depend () {
     if (Dep.target) {
+      // 调用watcher.addDep
       Dep.target.addDep(this)
     }
   }
@@ -52,15 +55,18 @@ export default class Dep {
 // The current target watcher being evaluated.
 // This is globally unique because only one watcher
 // can be evaluated at a time.
+// 全局的watcher，同一时间只能有一个watcher被计算
 Dep.target = null
 const targetStack = []
 
 export function pushTarget (target: ?Watcher) {
+  // 把父级的watcher保存到栈结构中
   targetStack.push(target)
   Dep.target = target
 }
 
 export function popTarget () {
+  // 恢复父级的watcher
   targetStack.pop()
   Dep.target = targetStack[targetStack.length - 1]
 }

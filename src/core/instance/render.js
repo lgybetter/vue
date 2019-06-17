@@ -91,6 +91,7 @@ export function renderMixin (Vue: Class<Component>) {
       /**
        * _renderProxy对vm对象进行劫持，主要用于校验render函数中用到的变量
        * $createElement提供用户自行编写render函数
+       * render的执行会触发响应式对象的getter执行
        */
       vnode = render.call(vm._renderProxy, vm.$createElement)
     } catch (e) {

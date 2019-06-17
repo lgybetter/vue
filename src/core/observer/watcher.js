@@ -99,10 +99,12 @@ export default class Watcher {
    * Evaluate the getter, and re-collect dependencies.
    */
   get () {
+    // 把当前的渲染watcher赋值给Dep.target
     pushTarget(this)
     let value
     const vm = this.vm
     try {
+      // 执行在mountComponet中传入的updateComponent
       value = this.getter.call(vm, vm)
     } catch (e) {
       if (this.user) {
@@ -131,6 +133,7 @@ export default class Watcher {
       this.newDepIds.add(id)
       this.newDeps.push(dep)
       if (!this.depIds.has(id)) {
+        // 把当前的watcher添加到dep的subs中，也就是当前的watcher作为订阅者
         dep.addSub(this)
       }
     }

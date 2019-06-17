@@ -170,8 +170,10 @@ export function defineReactive (
     get: function reactiveGetter () {
       const value = getter ? getter.call(obj) : val
       if (Dep.target) {
+        // 收集当前的渲染watcher，作为订阅者，方便set的时候进行触发更新
         dep.depend()
         if (childOb) {
+          // 用途是啥？
           childOb.dep.depend()
           if (Array.isArray(value)) {
             dependArray(value)
