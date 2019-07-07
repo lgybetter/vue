@@ -99,6 +99,7 @@ export default class Watcher {
    * Evaluate the getter, and re-collect dependencies.
    */
   get () {
+    debugger
     // 把当前的渲染watcher赋值给Dep.target
     pushTarget(this)
     let value
@@ -115,6 +116,7 @@ export default class Watcher {
     } finally {
       // "touch" every property so they are all tracked as
       // dependencies for deep watching
+      debugger
       if (this.deep) {
         traverse(value)
       }
@@ -211,6 +213,7 @@ export default class Watcher {
    * This only gets called for lazy watchers.
    */
   evaluate () {
+    debugger
     this.value = this.get()
     this.dirty = false
   }

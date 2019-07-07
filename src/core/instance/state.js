@@ -193,7 +193,7 @@ function initComputed (vm: Component, computed: Object) {
         vm
       )
     }
-
+    debugger
     if (!isSSR) {
       // create internal watcher for the computed property.
       watchers[key] = new Watcher(
@@ -252,6 +252,7 @@ export function defineComputed (
 
 function createComputedGetter (key) {
   return function computedGetter () {
+    debugger
     const watcher = this._computedWatchers && this._computedWatchers[key]
     if (watcher) {
       if (watcher.dirty) {

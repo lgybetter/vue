@@ -168,6 +168,7 @@ export function defineReactive (
     enumerable: true,
     configurable: true,
     get: function reactiveGetter () {
+      debugger
       const value = getter ? getter.call(obj) : val
       if (Dep.target) {
         // 收集当前的渲染watcher，作为订阅者，方便set的时候进行触发更新
@@ -183,6 +184,7 @@ export function defineReactive (
       return value
     },
     set: function reactiveSetter (newVal) {
+      debugger
       const value = getter ? getter.call(obj) : val
       /* eslint-disable no-self-compare */
       if (newVal === value || (newVal !== newVal && value !== value)) {
