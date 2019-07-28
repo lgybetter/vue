@@ -3,8 +3,14 @@ new Vue({
 
   computed: {
     message () {
-      return `name: ${this.name}, age: ${this.age}`;
+      return `age: ${this.age}`;
     } 
+  },
+
+  watch: {
+    name (val, oldVal) {
+      console.log(val, oldVal)
+    }
   },
 
   data: {

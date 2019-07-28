@@ -5941,13 +5941,16 @@
 
   function sameVnode (a, b) {
     return (
+      // v-for 的key
       a.key === b.key && (
         (
+          // tag，是否为注释节点，data是否定义，相同的input类型
           a.tag === b.tag &&
           a.isComment === b.isComment &&
           isDef(a.data) === isDef(b.data) &&
           sameInputType(a, b)
         ) || (
+          // 是否为异步组件占位符节点，异步工厂函数，异步组件错误处理函数
           isTrue(a.isAsyncPlaceholder) &&
           a.asyncFactory === b.asyncFactory &&
           isUndef(b.asyncFactory.error)
@@ -6189,9 +6192,11 @@
     }
 
     function isPatchable (vnode) {
+      // 组件vnode会有componentInstance，而渲染vnode没有
       while (vnode.componentInstance) {
         vnode = vnode.componentInstance._vnode;
       }
+      // 循环找到可挂载的节点，获取渲染vnode
       return isDef(vnode.tag)
     }
 
@@ -6445,21 +6450,27 @@
         for (i = 0; i < cbs.update.length; ++i) { cbs.update[i](oldVnode, vnode); }
         if (isDef(i = data.hook) && isDef(i = i.update)) { i(oldVnode, vnode); }
       }
+      // 新节点相同情况，比对children的4种情况
       if (isUndef(vnode.text)) {
         if (isDef(oldCh) && isDef(ch)) {
+          // 新旧节点都有定义
           if (oldCh !== ch) { updateChildren(elm, oldCh, ch, insertedVnodeQueue, removeOnly); }
         } else if (isDef(ch)) {
+          // 只有新节点有定义
           {
             checkDuplicateKeys(ch);
           }
           if (isDef(oldVnode.text)) { nodeOps.setTextContent(elm, ''); }
           addVnodes(elm, null, ch, 0, ch.length - 1, insertedVnodeQueue);
         } else if (isDef(oldCh)) {
+          // 只有旧节点有定义
           removeVnodes(oldCh, 0, oldCh.length - 1);
         } else if (isDef(oldVnode.text)) {
+          // 旧节点有text属性
           nodeOps.setTextContent(elm, '');
         }
       } else if (oldVnode.text !== vnode.text) {
+        // 如果是文本节点直接更新文本text
         nodeOps.setTextContent(elm, vnode.text);
       }
       if (isDef(data)) {
@@ -6612,6 +6623,7 @@
           // patch existing root node
           patchVnode(oldVnode, vnode, insertedVnodeQueue, null, null, removeOnly);
         } else {
+          // 两个节点不同
           if (isRealElement) {
             // mounting to a real element
             // check if this is server-rendered content and if we can perform
@@ -6642,7 +6654,7 @@
           // replacing existing element
           var oldElm = oldVnode.elm;
           var parentElm = nodeOps.parentNode(oldElm);
-
+          // 1. 创建一个新节点
           // create new node
           createElm(
             vnode,
@@ -6653,17 +6665,21 @@
             oldElm._leaveCb ? null : parentElm,
             nodeOps.nextSibling(oldElm)
           );
-
+          // 2. 更新父的占位符节点
           // update parent placeholder node element, recursively
           if (isDef(vnode.parent)) {
             var ancestor = vnode.parent;
+            // 当前的节点是否为可挂载的节点
             var patchable = isPatchable(vnode);
             while (ancestor) {
               for (var i = 0; i < cbs.destroy.length; ++i) {
+                // 执行钩子
                 cbs.destroy[i](ancestor);
               }
+              // 指向新的节点
               ancestor.elm = vnode.elm;
               if (patchable) {
+                // 执行create钩子
                 for (var i$1 = 0; i$1 < cbs.create.length; ++i$1) {
                   cbs.create[i$1](emptyNode, ancestor);
                 }
@@ -6683,7 +6699,7 @@
               ancestor = ancestor.parent;
             }
           }
-
+          // 3. 删除旧的节点
           // destroy old node
           if (isDef(parentElm)) {
             removeVnodes([oldVnode], 0, 0);
